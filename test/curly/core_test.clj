@@ -48,5 +48,11 @@
     (is (= [[1 :a] [2 :b] [3 nil] [4 nil]] (map-or vector [1 2 3 4] [:a :b])))
     (is (= [[1 :a] [2 :b] [nil :c] [nil :d]] (map-or vector [1 2] [:a :b :c :d])))
     (is (= [[1 :a 10] [2 :b 20] [nil :c 30] [nil nil 40]] (map-or vector [1 2] [:a :b :c] [10 20 30 40]))))
-)
+  (testing "version-compare"
+    (is (= 0 (version-compare "3" "3")))
+    (is (= 0 (version-compare "3.4" "3.4")))
+    (is (= 0 (version-compare "3.6.1" "3.6.1")))
+    (is (= 1 (version-compare "3.6.10" "3.6.1")))
+    (is (= 1 (version-compare "3.6.0" "3.6")))
+    (is (= -1 (version-compare "3" "3.6.1")))))
 
