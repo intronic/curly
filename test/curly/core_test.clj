@@ -27,3 +27,11 @@
   (testing "starts-with-ignore-case?"
     (is (starts-with-ignore-case? "abcde" "aBc"))
     (is (not (starts-with-ignore-case? "abcde" "bc")))))
+
+(deftest seqs
+  (testing "map-or"
+    (is (= [[1 :a] [2 :b]] (map-or vector [1 2] [:a :b])))
+    (is (= [[1 :a] [2 :b] [3 nil] [4 nil]] (map-or vector [1 2 3 4] [:a :b])))
+    (is (= [[1 :a] [2 :b] [nil :c] [nil :d]] (map-or vector [1 2] [:a :b :c :d])))
+    (is (= [[1 :a 10] [2 :b 20] [nil :c 30] [nil nil 40]] (map-or vector [1 2] [:a :b :c] [10 20 30 40])))))
+
