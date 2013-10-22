@@ -174,4 +174,4 @@ f should accept number-of-colls arguments."
         s2 (to-int-seq v2)]
     ;; compare each pair of elements, return first non-zero result
     ;; (meaning the versions are different) or 0 otherwise
-    (or (some #(if (not (zero? %)) %) (map-or compare s1 s2))) 0))
+    (or (some #(if (not (zero? %)) %) (map-or compare s1 s2)) 0)))
