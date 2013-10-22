@@ -18,7 +18,7 @@
 ;;; stats
 
 (defn z-score
-  [val {:keys [mean sd]}]
+  [val & [{:keys [mean sd] :or {mean 0 sd 1}}]]
   ;; note, this gives divide-by-zero error instead of Infinity or NaN
   ;; possibly to do with this bug:  http://dev.clojure.org/jira/browse/CLJ-1142
   ;; when sd=0.0 (eg, without the (double sd) cast:-
