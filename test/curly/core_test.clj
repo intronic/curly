@@ -29,9 +29,24 @@
     (is (not (starts-with-ignore-case? "abcde" "bc")))))
 
 (deftest seqs
+  (testing "all-permutations"
+    (is (= [[1 2 3] [1 3 2] [2 1 3] [2 3 1]  [3 1 2]  [3 2 1]] (all-permutations [1 2 3]))))
+  (testing "reverse-pair"
+    (is (= [1 :a] (reverse-pair [:a 1]))))
+  (testing "compare-rev"
+    (is (= (compare 2 1) (compare-rev 1 2)))
+    (is (= 0 (compare-rev 1 1)))
+    (is (= 1 (compare-rev 1 2)))
+    (is (= -1 (compare-rev 2 1))))
+  (testing "sum-vals"
+    (is (= 10 (sum-vals {:a 1 :b 2 :c 7}))))
+  (testing "sum-second"
+    (is (= 10 (sum-second {:a 1 :b 2 :c 7})))
+    (is (= 10 (sum-second [[:a 1] [:b 2] [:c 7]]))))
   (testing "map-or"
     (is (= [[1 :a] [2 :b]] (map-or vector [1 2] [:a :b])))
     (is (= [[1 :a] [2 :b] [3 nil] [4 nil]] (map-or vector [1 2 3 4] [:a :b])))
     (is (= [[1 :a] [2 :b] [nil :c] [nil :d]] (map-or vector [1 2] [:a :b :c :d])))
-    (is (= [[1 :a 10] [2 :b 20] [nil :c 30] [nil nil 40]] (map-or vector [1 2] [:a :b :c] [10 20 30 40])))))
+    (is (= [[1 :a 10] [2 :b 20] [nil :c 30] [nil nil 40]] (map-or vector [1 2] [:a :b :c] [10 20 30 40]))))
+)
 
