@@ -6,4 +6,4 @@
   :dependencies [[org.clojure/clojure "1.5.1"]]
   :scm {:name "git"
         :url "https://github.com/intronic/curly"
-        :tag ""})
+        :tag "0001a5ce23fe0f8a6f95e2b6128797cbfeb78f03"})
