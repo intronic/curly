@@ -1,4 +1,4 @@
-(defproject intronic/curly "0.1.2"
+(defproject intronic/curly "0.1.3"
   :description "Clojure utility library"
   :url "https://github.com/intronic/curly"
   :license {:name "Eclipse Public License"
