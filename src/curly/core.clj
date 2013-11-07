@@ -43,6 +43,28 @@
 
 ;; Seqs
 
+;;; sorting compare-by with keys and direction
+;;; https://groups.google.com/forum/#!topic/clojure/VVVa3TS15pU
+
+(defn compare-rev
+  "Compare reverse order"
+  [a b]
+  (compare b a))
+
+(def asc compare)                       ; alias for compare
+(def desc #(compare %2 %1))             ; same as compare-rev
+
+(defn compare-by [& key-cmp-pairs]
+  "Compare by keyword key-fn in either ascending or descending order. Eg:
+ (sort (compare-by :last-name asc, :date-of-birth desc, :weird-data-key custom-compare-fn) coll)"
+  (fn [x y]
+    (loop [[k cmp & more] key-cmp-pairs]
+      {:pre [(keyword? k), (fn? cmp), (even? (count more))]}
+      (let [result (cmp (k x) (k y))]
+        (if (and (zero? result) more)
+          (recur more)
+          result)))))
+
 (defn all-permutations [things]
   "All permutations of things."
   (if (= 1 (count things))
@@ -56,11 +78,6 @@
   "Reverse a pair vector"
   [[a b]]
   [b a])
-
-(defn compare-rev
-  "Compare reverse order"
-  [a b]
-  (compare b a))
 
 (defn sum-vals
   "Sum the values of a sequence of pairs (eg, a map or vector of pairs)"
