@@ -47,8 +47,11 @@ Total |   w+y     |   x+z     | w+x+y+z
   
   ;; The code calculates: given this number of ultraconserved genes and this
   ;; number of DNA-binding genes (and this total number of genes), what is the
-  ;; probability that the overlap between them is w or greater just by chance?
-
+  ;; probability that the overlap between them is w or greater just by
+  ;; chance?
+  
+  ;; lf is a pre-calculated array of values of the log factorial
+  ;; function to speed up a single calculation
   (let [n (+ w x y z)
         lf (into [] (reductions #(+ %1 (Math/log %2)) 0 (range 1 (inc n))))
         const (+ (lf (+ w x)) (lf (+ w y)) (lf (+ x z)) (lf (+ y z))
