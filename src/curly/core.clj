@@ -25,6 +25,37 @@
   ;;  (/ (- val mean) sd)
   (/ (- val mean) (double sd)))
 
+(defn fisher-p-value
+  "Fisher exact test.
+      | Outcome 1 | Outcome 2 | Total
+G1    |    w      |    x      | w+x
+G2    |    y      |    z      | y+z
+Total |   w+y     |   x+z     | w+x+y+z
+"
+  [w x y z]
+  ;; From Martin Smith:
+  ;;   https://mail.google.com/mail/u/1/?ui=2&shva=1#apps/from%3Amartin+frith++test/fd1108a5f4894c9
+  ;; 
+  ;; here's some perl code that does "Fisher's exact test". You need to input 4
+  ;; numbers: w, x, y, z. For example,
+  ;; w = DNA-binding genes with an ultraconserved-element
+  ;; x = non-DNA-binding genes with an ultraconserved-element
+  ;; y = DNA-binding genes without an ultraconserved-element
+  ;; z = non-DNA-binding genes without an ultraconserved-element
+  
+  ;; n = total number of genes = w+x+y+z
+  
+  ;; The code calculates: given this number of ultraconserved genes and this
+  ;; number of DNA-binding genes (and this total number of genes), what is the
+  ;; probability that the overlap between them is w or greater just by chance?
+
+  (let [n (+ w x y z)
+        lf (into [] (reductions #(+ %1 (Math/log %2)) 0 (range 1 (inc n))))
+        const (+ (lf (+ w x)) (lf (+ w y)) (lf (+ x z)) (lf (+ y z))
+                 (- (lf (+ w x y z))))]
+    (apply + (map (fn [w x y z] (Math/exp (- const (lf w) (lf x) (lf y) (lf z))))
+                  (iterate inc w) (range x (dec 0) -1) (range y 0 -1) (iterate inc z)))))
+
 ;; Strings
 
 (defn string-splice
