@@ -25,6 +25,26 @@
   ;;  (/ (- val mean) sd)
   (/ (- val mean) (double sd)))
 
+(let [lf (atom [0])]
+  (defn log-factorial
+    "log-factorial function that memoizes results in an atom cache.
+Called without any args it resets its cache."
+    ([] (reset! lf [0]) nil)
+    ([n]
+       {:pre [(integer? n)
+              (not (neg? n))]
+        :post [(> (count @lf) n)]}
+       (let [entries (count @lf)]
+         (if (>= n entries)
+           (swap! lf
+                  into
+                  ;; reductions returns the initial value, which is
+                  ;; already the last value in the cache
+                  (rest (reductions (fn [acc n] (+ acc (Math/log n)))
+                                    (peek @lf)
+                                    (range entries (inc n)))))))
+       (@lf n))))
+
 (defn fisher-p-value
   "Fisher exact test.
       | Outcome 1 | Outcome 2 | Total
@@ -53,7 +73,7 @@ Total |   w+y     |   x+z     | w+x+y+z
   ;; lf is a pre-calculated array of values of the log factorial
   ;; function to speed up a single calculation
   (let [n (+ w x y z)
-        lf (into [] (reductions #(+ %1 (Math/log %2)) 0 (range 1 (inc n))))
+        lf log-factorial
         const (+ (lf (+ w x)) (lf (+ w y)) (lf (+ x z)) (lf (+ y z))
                  (- (lf (+ w x y z))))]
     (apply + (map (fn [w x y z] (Math/exp (- const (lf w) (lf x) (lf y) (lf z))))
