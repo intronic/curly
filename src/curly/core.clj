@@ -246,3 +246,37 @@ f should accept number-of-colls arguments."
     ;; compare each pair of elements, return first non-zero result
     ;; (meaning the versions are different) or 0 otherwise
     (or (some #(if (not (zero? %)) %) (map-or compare s1 s2)) 0)))
+
+
+(defn- digits [n]
+  (map #(Character/digit % 10) (str n)))
+ 
+(defn luhn? [n]
+  (let [sum (reduce + (map
+                       (fn [d idx]
+                         (if (even? idx)
+                           (reduce + (digits (* d 2)))
+                           d))
+                       (reverse (digits n))
+                       (iterate inc 1)))]
+    (zero? (mod sum 10))))
+
+
+;; def checkLuhn(number) {
+;;     int total
+;;     (number as String).reverse().eachWithIndex { ch, index ->
+;;         def digit = Integer.parseInt(ch)
+;;         total += (index % 2 ==0) ? digit : [0, 2, 4, 6, 8, 1, 3, 5, 7, 9][digit]
+;;     }
+;;     total % 10 == 0
+;; }
+
+;; mod10check = function(cc) {
+;;   return $A(cc).reverse().map(Number).inject(0, function(s, d, i) {
+;;     return s + (i % 2 == 1 ? (d == 9 ? 9 : (d * 2) % 9) : d);
+;;   }) % 10 == 0;
+;; };
+;; ['49927398716','49927398717','1234567812345678','1234567812345670'].each(function(i){alert(mod10check(i))});
+
+#_(doseq [n [49927398716 49927398717 1234567812345678 1234567812345670]]
+  (println (luhn? n)))
