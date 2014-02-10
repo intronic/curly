@@ -53,6 +53,8 @@ G2    |    y      |    z      | y+z
 Total |   w+y     |   x+z     | w+x+y+z
 "
   [w x y z]
+  {:pre [(every? integer? [w x y z])
+         (every? (comp not neg?) [w x y z])]}
   ;; From Martin Smith:
   ;;   https://mail.google.com/mail/u/1/?ui=2&shva=1#apps/from%3Amartin+frith++test/fd1108a5f4894c9
   ;; 
