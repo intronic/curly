@@ -55,8 +55,7 @@ Total |   w+y     |   x+z     | w+x+y+z
   [w x y z]
   {:pre [(every? integer? [w x y z])
          (every? (comp not neg?) [w x y z])]}
-  ;; From Martin Smith:
-  ;;   https://mail.google.com/mail/u/1/?ui=2&shva=1#apps/from%3Amartin+frith++test/fd1108a5f4894c9
+  ;; In email from Martin Smith: (search email from:martin+smith fishers
   ;; 
   ;; here's some perl code that does "Fisher's exact test". You need to input 4
   ;; numbers: w, x, y, z. For example,
@@ -66,7 +65,10 @@ Total |   w+y     |   x+z     | w+x+y+z
   ;; z = non-DNA-binding genes without an ultraconserved-element
   
   ;; n = total number of genes = w+x+y+z
-  
+
+  ;;  right p-value = (fisher-p-value p q r s)
+  ;;  left p-value  = (fisher-p-value q p s r)
+
   ;; The code calculates: given this number of ultraconserved genes and this
   ;; number of DNA-binding genes (and this total number of genes), what is the
   ;; probability that the overlap between them is w or greater just by
@@ -74,12 +76,17 @@ Total |   w+y     |   x+z     | w+x+y+z
   
   ;; lf is a pre-calculated array of values of the log factorial
   ;; function to speed up a single calculation
-  (let [n (+ w x y z)
-        lf log-factorial
+  (let [lf log-factorial
+        n (+ w x y z)
+        lf-n (lf n)      ; calc this first to load log-factorial cache
         const (+ (lf (+ w x)) (lf (+ w y)) (lf (+ x z)) (lf (+ y z))
-                 (- (lf (+ w x y z))))]
-    (apply + (map (fn [w x y z] (Math/exp (- const (lf w) (lf x) (lf y) (lf z))))
-                  (iterate inc w) (range x (dec 0) -1) (range y 0 -1) (iterate inc z)))))
+                 (- lf-n))]
+    ;; to ensure p-value cant get past 1 due to rounding error
+    (min 1 (apply + (map (fn [w x y z] (Math/exp (- const (lf w) (lf x) (lf y) (lf z))))
+                         (iterate inc w)
+                         (range x (dec 0) -1) ; x down to 0
+                         (range y (dec 0) -1) ; y down to 0
+                         (iterate inc z))))))
 
 ;; Strings
 
