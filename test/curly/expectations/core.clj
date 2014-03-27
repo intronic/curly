@@ -13,11 +13,13 @@
 (expect false (one? 2))
 (expect true (one? 1))
 
-(expect java.lang.ArithmeticException (nan? (/ 0 0)))
+;;; 0 / 0
+(expect java.lang.ArithmeticException (nan? (/ 0 0)))  ; divide-by-0
 (expect true (nan? (/ 0   0.0)))
 (expect true (nan? (/ 0.0   0)))
 (expect true (nan? (/ 0.0 0.0)))
 
+;;; 0.0 / x is all ok
 (expect false (nan? (/ 1 0.0)))
 (expect false (nan? (/ -1 0.0)))
 
@@ -31,3 +33,12 @@
 (expect 1.0 (z-score 1 {:mean 0 :sd 1}))
 (expect 2.0 (z-score 2 {:mean 0 :sd 1}))
 (expect zero? (z-score 1 {:mean 1 :sd 2}))
+
+;;;  string-splice
+(expect "abobe" (string-splice "abcde" "bob" 1))
+(expect "bobde" (string-splice "abcde" "bob" 0))
+(expect "12345" (string-splice "abcde" "12345" 0))
+
+;;; starts-with-ignore-case?
+(expect (starts-with-ignore-case? "abcde" "aBc"))
+(expect false (starts-with-ignore-case? "abcde" "bc"))
