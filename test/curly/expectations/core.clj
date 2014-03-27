@@ -42,3 +42,36 @@
 ;;; starts-with-ignore-case?
 (expect (starts-with-ignore-case? "abcde" "aBc"))
 (expect false (starts-with-ignore-case? "abcde" "bc"))
+
+;;; all-permutations
+(expect [[1 2 3] [1 3 2] [2 1 3] [2 3 1]  [3 1 2]  [3 2 1]] (all-permutations [1 2 3]))
+
+;;; reverse-pair
+(expect [1 :a] (reverse-pair [:a 1]))
+
+;;; compare-rev
+(expect (compare 2 1) (compare-rev 1 2))
+(expect 0 (compare-rev 1 1))
+(expect 1 (compare-rev 1 2))
+(expect -1 (compare-rev 2 1))
+
+;;; sum-vals
+(expect 10 (sum-vals {:a 1 :b 2 :c 7}))
+
+;;; sum-second
+(expect 10 (sum-second {:a 1 :b 2 :c 7}))
+(expect 10 (sum-second [[:a 1] [:b 2] [:c 7]]))
+
+;;; map-or
+(expect [[1 :a] [2 :b]] (map-or vector [1 2] [:a :b]))
+(expect [[1 :a] [2 :b] [3 nil] [4 nil]] (map-or vector [1 2 3 4] [:a :b]))
+(expect [[1 :a] [2 :b] [nil :c] [nil :d]] (map-or vector [1 2] [:a :b :c :d]))
+(expect [[1 :a 10] [2 :b 20] [nil :c 30] [nil nil 40]] (map-or vector [1 2] [:a :b :c] [10 20 30 40]))
+
+;;; version-compare
+(expect 0 (version-compare "3" "3"))
+(expect 0 (version-compare "3.4" "3.4"))
+(expect 0 (version-compare "3.6.1" "3.6.1"))
+(expect 1 (version-compare "3.6.10" "3.6.1"))
+(expect 1 (version-compare "3.6.0" "3.6"))
+(expect -1 (version-compare "3" "3.6.1"))
