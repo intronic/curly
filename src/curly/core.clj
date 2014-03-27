@@ -258,7 +258,7 @@ f should accept number-of-colls arguments."
 
 
 (defn- digits [n]
-  (map #(Character/digit % 10) (str n)))
+  (map #(Character/digit ^Character % 10) (str n)))
  
 (defn luhn? [n]
   (let [sum (reduce + (map
